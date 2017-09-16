@@ -294,7 +294,7 @@ def catnewitems(id):
 			new_item = Items(name=request.form['newitem'],
 							description=request.form['description'],
 							catalog_id=cat.id,
-							user_id=cat.user_id)
+							user_id=getUserID(login_session['email']))
 			session.add(new_item)
 			session.commit()
 			return redirect(url_for('catitems', id = cat.id))
