@@ -198,10 +198,10 @@ def newcat():
 
 @app.route('/kittycat/<int:id>/edit', methods=['GET', 'POST'])
 def editcat(id):
-	cat = session.query(Catalog).filter_by(id = id).one()
 	if 'username' not in login_session:
 		flash('This option requires you to log in!')
 		return redirect('/login')
+	cat = session.query(Catalog).filter_by(id = id).one()
 	if getUserID(login_session['email']) != cat.user_id:
 		flash('Sorry you are not authorized to edit this cat!')
 		return redirect('/')
@@ -221,11 +221,23 @@ def deletecat(id):
 		flash('This option requires you to log in!')
 		return redirect('/login')
 	cat = session.query(Catalog).filter_by(id = id).one()
+	try: 
+		items = session.query(Items).filter_by(catalog_id = id).all()
+	except:
+		items = []
+
+	if not items:
+		print 'hey'
+	else: 
+		print items
 	if getUserID(login_session['email']) != cat.user_id:
 		flash('Sorry you are not authorized to delete this cat!')
 		return redirect('/')
 	if request.method == 'POST':
 		session.delete(cat)
+		if items:
+			for item in items:
+				session.delete(item)
 		session.commit()
 		return redirect('/kittycat')
 	return render_template('deletecat.html', cat = cat)
