@@ -202,6 +202,8 @@ def kittycatJSON():
 # page for adding new cats.
 @app.route('/kittycat/newcat', methods=['GET', 'POST'])
 def newcat():
+	# this if statements are found in all the pages where it creates, edits,
+	# or deletes an item or a catalog. Checks if the user is logged in.
 	if 'username' not in login_session:
 		flash('This option requires you to log in!')
 		return redirect('/login')
@@ -224,6 +226,7 @@ def editcat(id):
 		flash('This option requires you to log in!')
 		return redirect('/login')
 	cat = session.query(Catalog).filter_by(id=id).one()
+	# make sure the signed user is the creator of the cat.
 	if getUserID(login_session['email']) != cat.user_id:
 		flash('Sorry you are not authorized to edit this cat!')
 		return redirect('/')
@@ -258,6 +261,7 @@ def deletecat(id):
 		return redirect('/')
 	if request.method == 'POST':
 		session.delete(cat)
+		# if the cat had items, all its items, also delete its items.
 		if items:
 			for item in items:
 				session.delete(item)
