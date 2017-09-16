@@ -1,24 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel = "stylesheet" type = "text/css" href = "{{url_for('static', filename='style.css')}}">
+<link href="https://fonts.googleapis.com/css?family=Gloria+Hallelujah" rel="stylesheet">
 </head>
 <body>
-<h1> Items in Possession under {{cat.name}} </h1>
-{% if not items %}
-<div>
-	<p> Poor {{cat.name}} doesn't have anything to show.... Show him some love
-		<a href="{{url_for('catnewitems', id = cat.id)}}">by
-			donating him a toy today</a></p>
+<div class='container'>
+	<h1> Items in Possession under {{cat.name}} </h1>
+	{% with messages = get_flashed_messages() %}
+	{% if messages %}
+	{% for message in messages %}
+	<div class='flashmessage'><h2> {{message}} </h2></div>
+	{% endfor %}
+	{% endif %}
+	{% endwith %}
+
+	{% if not items %}
+	<div>
+		<img class='noitmecat' src="https://i.pinimg.com/736x/69/f8/74/69f874d2e381e562cd921a654862d447--pet-pet-cute-kitty.jpg" alt='desperate cat'>
+		<p> Poor {{cat.name}} doesn't have anything to show.... Show him some love
+			<a class='giveitem' href="{{url_for('catnewitems', id = cat.id)}}">by
+				donating him a toy today</a></p>
+	</div>
+	{% else %}
+	{% for i in items %}
+	<div class='item'>
+		<h2>{{i.name.title()}}</h2>
+		<p class='description'> {{i.description}} </p>
+		<a href="{{url_for('catitemedit', id = cat.id, item_id = i.id)}}">edit</a>
+		<a href="{{url_for('catitemdelete', id = cat.id, item_id = i.id)}}">delete</a>
+	</div>
+	{% endfor %}
+	<p> Want to give this cat something different? <a class='giveitem' href="{{url_for('catnewitems', id = cat.id)}}">Give now!</a></p>
+	{% endif %}
+	
 </div>
-{% else %}
-{% for i in items %}
-<div class='item'>
-	<h2>{{i.name.title()}}: <span class='description'> {{i.description}} </span> </h2>
-	<a href="{{url_for('catitemedit', id = cat.id, item_id = i.id)}}">edit</a>
-	<a href="{{url_for('catitemdelete', id = cat.id, item_id = i.id)}}">delete</a>
-</div>
-{% endfor %}
-{% endif %}
-<p> Want to give this cat something different? <a href="{{url_for('catnewitems', id = cat.id)}}">Give now</a>!
 </body>
 </html>

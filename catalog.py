@@ -1,7 +1,7 @@
 from flask import Flask, render_template, url_for, request, redirect, jsonify, flash
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Catalog, Items
+from database_setup import Base, Catalog, Items, User
 
 from flask import session as login_session
 import random, string
@@ -25,6 +25,28 @@ DBSession = sessionmaker(bind = engine)
 session = DBSession()
 
 most_recent = []
+
+
+def getUserID(email):
+	try:
+		user = session.query(User).filter_by(email = email).one()
+		return user.id
+	except:
+		return None
+
+def getUserInfo(user_id):
+	user = session.query(User).filter_by(id = user_id).one()
+	return user
+
+def createUser(login_session):
+	newUser = User(name = login_session['username'],
+					email = login_session['email'],
+					picture = login_session['picture'])
+	session.add(newUser)
+	session.commit()
+	user = session.query(User).filter_by(email = login_session['email']).one()
+	print 'NEW USER CREATED'
+	return user.id
 
 @app.route('/login')
 def showLogin():
@@ -104,23 +126,53 @@ def gconnect():
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
+    user_id = getUserID(login_session['email'])
+    if not user_id:
+    	user = createUser(login_session)
+    print 'NEW USER CREATED'
 
     output = ''
     output += '<h1>Welcome, '
     output += login_session['username']
     output += '!</h1>'
-    output += '<img src="'
-    output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
     flash("you are now logged in as %s" % login_session['username'])
     print "done!"
     return output
+
+@app.route('/gdisconnect')
+def gdisconnect():
+    access_token = login_session.get('access_token')
+    if access_token is None:
+        print 'Access Token is None'
+        response = make_response(json.dumps('Current user not connected.'), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    print 'In gdisconnect access token is %s', access_token
+    print 'User name is: '
+    print login_session['username']
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
+    h = httplib2.Http()
+    result = h.request(url, 'GET')[0]
+    print 'result is '
+    print result
+    if result['status'] == '200':
+        del login_session['access_token']
+        del login_session['gplus_id']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+        flash('Successfully disconnected!')
+        return redirect('/')
+    else:
+        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
+        response.headers['Content-Type'] = 'application/json'
+        return response
 
 @app.route('/')
 @app.route('/kittycat')
 def kittycat():
 	cats = session.query(Catalog).all()
-	return render_template('main.html', cats = cats)
+	return render_template('main.html', cats = cats, login_session = login_session)
 
 @app.route('/kittycat/JSON')
 def kittycatJSON():
@@ -130,20 +182,29 @@ def kittycatJSON():
 
 @app.route('/kittycat/newcat', methods=['GET', 'POST'])
 def newcat():
+	if 'username' not in login_session:
+		flash('This option requires you to log in!')
+		return redirect('/login')
 	if request.method == 'POST':
 		if request.form['name']:
-			newcat = Catalog(name = request.form['name'])
+			newcat = Catalog(name = request.form['name'], user_id = getUserID(login_session['email']))
 			session.add(newcat)
 			session.commit()
 			flash('NEW CAT %s IS IN THE HAUS' %request.form['name'])
 			return redirect('/kittycat')
 		else:
 			return render_template('401.html')
-	return render_template('newcat.html')
+	return render_template('newcat.html', login_session = login_session)
 
 @app.route('/kittycat/<int:id>/edit', methods=['GET', 'POST'])
 def editcat(id):
 	cat = session.query(Catalog).filter_by(id = id).one()
+	if 'username' not in login_session:
+		flash('This option requires you to log in!')
+		return redirect('/login')
+	if getUserID(login_session['email']) != cat.user_id:
+		flash('Sorry you are not authorized to edit this cat!')
+		return redirect('/')
 	if request.method == 'POST':
 		if request.form['catname']:
 			cat.name = request.form['catname']
@@ -156,7 +217,13 @@ def editcat(id):
 
 @app.route('/kittycat/<int:id>/delete', methods=['GET', 'POST'])
 def deletecat(id):
+	if 'username' not in login_session:
+		flash('This option requires you to log in!')
+		return redirect('/login')
 	cat = session.query(Catalog).filter_by(id = id).one()
+	if getUserID(login_session['email']) != cat.user_id:
+		flash('Sorry you are not authorized to delete this cat!')
+		return redirect('/')
 	if request.method == 'POST':
 		session.delete(cat)
 		session.commit()
@@ -177,12 +244,16 @@ def itemsJSON(id):
 
 @app.route('/kittycat/<int:id>/items/new', methods=['GET', 'POST'])
 def catnewitems(id):
+	if 'username' not in login_session:
+		flash('This option requires you to log in!')
+		return redirect('/login')
 	cat = session.query(Catalog).filter_by(id = id).one()
 	if request.method == 'POST':
 		if request.form['newitem'] and request.form['description']:
 			new_item = Items(name = request.form['newitem'],
 				description = request.form['description'],
-				catalog_id = cat.id)
+				catalog_id = cat.id,
+				user_id = cat.user_id)
 			session.add(new_item)
 			session.commit()
 			return redirect(url_for('catitems', id = cat.id))
@@ -192,11 +263,17 @@ def catnewitems(id):
 
 @app.route('/kittycat/<int:id>/items/<int:item_id>/edit', methods=['GET', 'POST'])
 def catitemedit(id, item_id):
+	if 'username' not in login_session:
+		flash('This option requires you to log in!')
+		return redirect('/login')
 	cat = session.query(Catalog).filter_by(id = id).one()
 	item = session.query(Items).filter_by(id = item_id).one()
+	if getUserID(login_session['email']) != item.user_id:
+		flash('Sorry you are not authorized to edit this item!')
+		return redirect('/kittycat/%s/items' % cat.id)
 	if request.method == 'POST':
 		if request.form['itemname']:
-			item.name = request.form['itemna me']
+			item.name = request.form['itemname']
 			item.description = request.form['newdesc']
 			session.add(item)
 			session.commit()
@@ -207,8 +284,14 @@ def catitemedit(id, item_id):
 
 @app.route('/kittycat/<int:id>/items/<int:item_id>/delete', methods=['GET', 'POST'])
 def catitemdelete(id, item_id):
+	if 'username' not in login_session:
+		flash('This option requires you to log in!')
+		return redirect('/login')
 	cat = session.query(Catalog).filter_by(id = id).one()
 	item = session.query(Items).filter_by(id = item_id).one()
+	if getUserID(login_session['email']) != item.user_id:
+		flash('Sorry you are not authorized to delete this item!')
+		return redirect('/kittycat/%s/items' % cat.id)
 	if request.method == 'POST':
 		session.delete(item)
 		session.commit()

@@ -3,24 +3,37 @@
 <head>
  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
  </script>
-
+<link rel = "stylesheet" type = "text/css" href = "../static/style.css">
+<link href="https://fonts.googleapis.com/css?family=Gloria+Hallelujah" rel="stylesheet">
 <script src="//apis.google.com/js/platform.js?onload=start"> </script>
 
 </head>
 <body>
+<div class='login-container'>
+  <h2> Sign in to get access to the full Kittycatalog!</h2>
 
-<div id="signInButton">
-  <span class="g-signin"
-    data-scope="openid email"
-    data-clientid="145985865077-citd37ufj13d9bm7ajhs8nbdpe72ib52.apps.googleusercontent.com"
-    data-redirecturi="postmessage"
-    data-accesstype="offline"
-    data-cookiepolicy="single_host_origin"
-    data-callback="signInCallback"
-    data-approvalprompt="force">
-  </span>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+  <div class='flashmessage'><h2> {{message}} </h2></div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+</br>
+  <div id="signInButton">
+    <span class="g-signin"
+      data-scope="openid email"
+      data-clientid="145985865077-citd37ufj13d9bm7ajhs8nbdpe72ib52.apps.googleusercontent.com"
+      data-redirecturi="postmessage"
+      data-accesstype="offline"
+      data-cookiepolicy="single_host_origin"
+      data-callback="signInCallback"
+      data-approvalprompt="force">
+    </span>
+  </div>
+  <div id='result'></div>
+  <img src="https://cdn.geckoandfly.com/wp-content/uploads/2013/07/cover10549.jpg" alt="cat" class='logincat'>
 </div>
-<div id='result'></div>
 <script>
 function signInCallback(authResult) {
   if (authResult['code']) {

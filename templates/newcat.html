@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel = "stylesheet" type = "text/css" href = "{{url_for('static', filename='style.css')}}">
 </head>
 <body>
+<header>
+	<img src="{{ login_session['picture'] }}" class="profile-pic">
+	<span>Welcome {{ login_session['username'] }}</span></br>
+	<a href="/gdisconnect"> Log out </a>
+</header>
+<div class='container'>
 	<h1>Add youse perrrrfect cat today!!</h1>
 	<form method='POST' enctype='multipart/form-data' action='{{url_for('newcat')}}'>
 		<span> New Cat Name: </span>
 		<input type="text" size='30' name='name' placeholder="meow">
 		<input type="submit" value='add'>
-	</form>
-	<a href="/kittycat"> Cancel </a> 
+	</form></br>
+	<a href="/kittycat"> Cancel </a>
+</br>
+</div>
 </body>
 </html>

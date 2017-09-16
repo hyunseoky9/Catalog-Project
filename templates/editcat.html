@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel = "stylesheet" type = "text/css" href = "{{url_for('static', filename='style.css')}}">
 </head>
 <body>
+<div class='container'>
 	<h1> Change the name for {{cat.name}}! </h1>
 	<form method="POST" enctype="multipart/form-data" action='{{url_for('editcat', id = cat.id)}}'>
 		<input type="text" size='30' name='catname' placeholder="purrrrr">
-		<input type='submit' value='editcat'>
+		<input type='submit' value='edit'>
 	</form>
 	<a href="{{url_for('kittycat')}}"> Cancel </a>
+</div>
 </body>
 </html>

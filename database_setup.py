@@ -6,6 +6,20 @@ from sqlalchemy import create_engine
 
 Base = declarative_base()
 
+class User(Base):
+	__tablename__ = 'users'
+	name = Column(
+		String(80),
+		nullable = False)
+	id = Column(
+		Integer,
+		nullable = False,
+		primary_key = True)
+	email = Column(
+		String(80),
+		nullable = False)
+	picture = Column(String(400))
+
 class Catalog(Base):
 	__tablename__ = 'catalog'
 	name = Column(
@@ -15,6 +29,10 @@ class Catalog(Base):
 		Integer,
 		nullable = False,
 		primary_key = True)
+	user_id = Column(
+		Integer,
+		ForeignKey('users.id'))
+	user = relationship(User)
 
 	@property
 	def serialize(self):
@@ -38,6 +56,10 @@ class Items(Base):
 		Integer, 
 		ForeignKey('catalog.id'))
 	catalog = relationship(Catalog)
+	user_id = Column(
+		Integer,
+		ForeignKey('users.id'))
+	user = relationship(User)
 
 	@property
 	def serialize(self):

@@ -1,0 +1,92 @@
+body {
+	 background-image: linear-gradient(rgba(255,255,255,0.8),rgba(255,255,255,0.8)), url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcPlPO-lBJcYrekWkeJ7NrejdzMEgvX3ygsRGpsWDYci3dNLK6PA");
+}
+
+a {
+	text-decoration: none;
+	color: black;
+}
+
+.container {
+	text-align: center;
+	font-family: 'Gloria Hallelujah', cursive;
+	border-width: 5px;
+	border-style: solid;
+	border-radius: 5px;
+	margin: 0 10% 0 10%;
+}
+.flashmessage {
+	color: red;
+}
+/*
+Login icons
+*/
+header {
+	font-family: 'Gloria Hallelujah', cursive;
+}
+header a{
+	text-decoration: underline;
+}
+.profile-pic{
+	width: 3%;
+	height: 3%;
+	border-radius: 50%;
+}
+
+/*
+Main
+*/
+.catalogs h2{
+	margin-bottom: 0;
+}
+
+.add-new-kitty a{
+	text-decoration: underline;
+}
+
+/*
+Login.html
+*/
+.login-container {
+	font-family: 'Gloria Hallelujah', cursive;
+	border-width: 5px;
+	border-style: solid;
+	border-radius: 5px;
+	text-align: center;
+	margin: 0 30% 0 30%;
+}
+
+.logincat {
+	width: 82%;
+	height: auto;
+}
+
+/*
+items.html
+*/
+
+.item h2{
+	margin-bottom: 0;
+}
+
+.description {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.giveitem {
+	text-decoration: underline;
+}
+
+.noitmecat {
+	width: 20%;
+	height: auto;
+}
+
+/*
+error
+*/
+
+.error {
+	text-decoration: underline;
+}

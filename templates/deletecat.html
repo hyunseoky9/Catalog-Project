@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel = "stylesheet" type = "text/css" href = "{{url_for('static', filename='style.css')}}">
 </head>
 <body>
-<h1> Are you letting {{cat.name}} Go?! </h1>
-<img src="" alt='sad kitty'>
-<form method="POST" enctype="multipart/form-data" action='{{url_for('deletecat', id = cat.id)}}'>
-	<input type='submit' value='delete'>
-</form>
-<a href="/kittycat"> Cancel </a>
+<div class='container'>
+	<h1> Are you letting {{cat.name}} Go?! </h1>
+	<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3mKRgg8IIXyDxBxIn0h4lNrsqpuiCxoL33y25d_tRo8UiBtNr" alt='sad kitty'></br>
+	<form method="POST" enctype="multipart/form-data" action='{{url_for('deletecat', id = cat.id)}}'>
+		<input type='submit' value='delete'>
+	</form>
+	<a href="/kittycat"> Cancel </a>
+</div>
 </body>
 </html>

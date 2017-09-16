@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel = "stylesheet" type = "text/css" href = "{{url_for('static', filename='style.css')}}">
 </head>
 <body>
-<h1> Are you taking away {{item.name}} from {{cat.name}}? </h1>
-<img src="" alt='sad kitty'></br>
-<form method="POST" enctype="multipart/form-data" action='{{url_for('catitemdelete', id = cat.id, item_id = item.id)}}'>
-	<input type='submit' value='delete'>
-</form>
-<a href='{{url_for('catitems', id = cat.id)}}'> Cancel </a>
+<div class='container'>
+	<h1> Are you taking away {{item.name}} from {{cat.name}}? </h1>
+	<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3mKRgg8IIXyDxBxIn0h4lNrsqpuiCxoL33y25d_tRo8UiBtNr" alt='sad kitty'></br>
+	<form method="POST" enctype="multipart/form-data" action='{{url_for('catitemdelete', id = cat.id, item_id = item.id)}}'>
+		<input type='submit' value='Sorry {{cat.name}}'>
+	</form></br>
+	<a href='{{url_for('catitems', id = cat.id)}}'> I.... can't....</a>
+</div>
 </body>
 </html>

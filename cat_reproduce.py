@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Catalog, Items
+from database_setup import Base, Catalog, Items, User
 
 engine = create_engine('sqlite:///kittycat.db')
 Base.metadata.bind = engine
@@ -25,14 +25,20 @@ cat_items = {'pearl': 'shiny pearls that cats revere',
 		'water sprinkler': 'used to water the catnips',
 		'skinny jeans': 'why not'}
 
+myuser = User(name = 'Terminator',
+				email = 'terminator@ornell.edu',
+				picture = 'https://www.sideshowtoy.com/wp-content/uploads/2015/06/the-terminator-t-800-life-size-bust-feature-400219.jpg')
+session.add(myuser)
+session.commit()
 for breed in breeds.keys():
-	mycat = Catalog(name = breed)
+	mycat = Catalog(name = breed,
+					user = myuser)
 	session.add(mycat)
 	session.commit()
 	for item in breeds[breed]:
 		myitem = Items(name = item,
 						description = cat_items[item],
-						catalog = mycat
-						)
+						catalog = mycat,
+						user = myuser)
 		session.add(myitem)
 		session.commit()
