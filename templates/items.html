@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<h1> Items in Possession under {{cat.name}} </h1>
+{% if not items %}
+<div>
+	<p> Poor {{cat.name}} doesn't have anything to show.... Show him some love
+		<a href="{{url_for('catnewitems', id = cat.id)}}">by
+			donating him a toy today</a></p>
+</div>
+{% else %}
+{% for i in items %}
+<div class='item'>
+	<h2>{{i.name.title()}}: <span class='description'> {{i.description}} </span> </h2>
+	<a href="{{url_for('catitemedit', id = cat.id, item_id = i.id)}}">edit</a>
+	<a href="{{url_for('catitemdelete', id = cat.id, item_id = i.id)}}">delete</a>
+</div>
+{% endfor %}
+{% endif %}
+<p> Want to give this cat something different? <a href="{{url_for('catnewitems', id = cat.id)}}">Give now</a>!
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<h1> Does {{cat.name}} deserve something better? </h1>
+<form method="POST" enctype="multipart/form-data" action='{{url_for('catitemedit', id = cat.id, item_id = item.id)}}'>
+	<span> New Item: </span>
+	<input type="text" size='30' name='itemname' placeholder="current item: {{item.name}}">
+	</br>
+	<p> New Description </p>
+	<textarea rows="4" cols="50" name='newdesc'></textarea>
+</br>
+	<input type='submit' value='edit'>
+</form>
+</br>	
+<a href="{{url_for('catitems', id = cat.id)}}"> NOPE </a>
+</body>
+</html>

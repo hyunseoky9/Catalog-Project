@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+	<h1>Give {{cat.name}} something Shwifty!!</h1>
+	<form method='POST' enctype='multipart/form-data' action='{{url_for('catnewitems', id = cat.id)}}'>
+			<span> New Item Name: </span>
+			<input type="text" size='30' name='newitem' placeholder="meoooow">
+			</br>
+			<p> Description: </p>
+			<textarea rows='4' cols= '50' name='description' placeholder='meow meow meow'></textarea>
+			</br>			
+			<input type="submit" value='add'>
+
+	</form>
+</br>
+	<a href="{{url_for('catitems', id = cat.id)}}"> No toys for {{cat.name}} yet. He's been a bad kitty </a> 
+</body>
+</html>

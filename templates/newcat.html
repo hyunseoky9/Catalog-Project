@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+	<h1>Add youse perrrrfect cat today!!</h1>
+	<form method='POST' enctype='multipart/form-data' action='{{url_for('newcat')}}'>
+		<span> New Cat Name: </span>
+		<input type="text" size='30' name='name' placeholder="meow">
+		<input type="submit" value='add'>
+	</form>
+	<a href="/kittycat"> Cancel </a> 
+</body>
+</html>

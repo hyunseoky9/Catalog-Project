@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<header>
+	<a href="/login"> Log In </a>
+</header>
+<img src="" alt="main pic">
+<h1> Welcome to Kitty Catalogs!</h1>
+<h2> Find your favorite cat here today and see what kind of cool stuff they've got! </h2>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+<div class='flashmessage'><h2> {{message}} </h2></div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<div class="catalogs">
+	{% for cat in cats %}
+	<h2><a href="{{url_for('catitems', id = cat.id)}}">{{cat.name}}</a></h2>
+	<a href="{{url_for('editcat', id = cat.id)}}">edit</a>
+	<a href="{{url_for('deletecat', id = cat.id)}}">delete</a>
+	{% endfor %}
+</div>
+<div calss="recents">
+
+</div>
+<div class="add-new-kitty">
+	<p>Don't see your favorite kitty here ? <a href="{{url_for('newcat')}}"> Add one then </a>! </p>
+</div>
+
+<script>
+		
+</script>
+
+</body>
+</html>

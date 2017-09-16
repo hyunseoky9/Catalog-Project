@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<h1> Are you taking away {{item.name}} from {{cat.name}}? </h1>
+<img src="" alt='sad kitty'></br>
+<form method="POST" enctype="multipart/form-data" action='{{url_for('catitemdelete', id = cat.id, item_id = item.id)}}'>
+	<input type='submit' value='delete'>
+</form>
+<a href='{{url_for('catitems', id = cat.id)}}'> Cancel </a>
+</body>
+</html>
