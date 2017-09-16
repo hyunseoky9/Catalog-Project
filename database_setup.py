@@ -7,6 +7,11 @@ from sqlalchemy import create_engine
 Base = declarative_base()
 
 class User(Base):
+	'''
+	This table contains all the user info.
+	Each row is a user with name, email, picture,
+	and id information
+	'''
 	__tablename__ = 'users'
 	name = Column(
 		String(80),
@@ -21,6 +26,11 @@ class User(Base):
 	picture = Column(String(400))
 
 class Catalog(Base):
+	'''
+	This table contains all the category info.
+	Each row has the name and id of the category,
+	and the user_id of a user who made the category.
+	'''
 	__tablename__ = 'catalog'
 	name = Column(
 		String(80),
@@ -42,6 +52,12 @@ class Catalog(Base):
 		}
 
 class Items(Base):
+	'''
+	This table contains all the info for the items 
+	that a category has. Each row is the item's name,
+	description, id, catalog id that the item is under,
+	and user id the item is made by.
+	'''
 	__tablename__ = 'items'
 	name = Column(
 		String(80),
